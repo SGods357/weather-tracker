@@ -87,6 +87,7 @@ forecast_df = pd.DataFrame({
 current_data = get_current_weather(LATITUDE, LONGITUDE)
 current_temp = current_data["current"]["temperature_2m"]
 current_time = current_data["current"]["time"]
+temp_f = (current_temp * 9/5) + 32
 
 # Results
 print(f"Weather analysis for {LOCATION_NAME}")
