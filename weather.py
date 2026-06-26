@@ -152,4 +152,8 @@ def generate_dashboard(df):
     fig.write_html("dashboard.html", include_plotlyjs="cdn")
     print("Dashboard saved to dashboard.html")
 
-generate_dashboard(log_df)
+dashboard_df = pd.read_csv("daily_log.csv", skipinitialspace=True)
+dashboard_df["datetime"] = pd.to_datetime(dashboard_df["time"])
+dashboard_df = dashboard_df.sort_values("datetime")
+
+generate_dashboard(dashboard_df)
