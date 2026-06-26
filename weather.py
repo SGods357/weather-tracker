@@ -11,8 +11,8 @@ import matplotlib.dates as mdates
 
 import plotly.graph_objects as go
 
-HOT_THRESHOLD = 20
-COLD_THRESHOLD = 45
+HOT_THRESHOLD = 40
+COLD_THRESHOLD = 30
 DISCORD_WEBHOOK_URL = os.environ.get("DISCORD_WEBHOOK_URL", "")
 
 # My camping location
