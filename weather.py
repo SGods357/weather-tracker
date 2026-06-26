@@ -11,6 +11,10 @@ import matplotlib.dates as mdates
 
 import plotly.graph_objects as go
 
+HOT_THRESHOLD = 20
+COLD_THRESHOLD = 45
+DISCORD_WEBHOOK_URL = os.environ.get("DISCORD_WEBHOOK_URL", "")
+
 # My camping location
 LATITUDE = -45.4167
 LONGITUDE = 167.7167
@@ -20,6 +24,16 @@ LOCATION_NAME = "Fiordland National Park, New Zealand"
 CAMP_MONTH = 8
 CAMP_START_DAY = 1
 CAMP_END_DAY = 14
+
+def send_discord_alert(message):
+    if not DISCORD_WEBHOOK_URL:
+        print("No Discord webhook configured.")
+        return
+    response = requests.post(DISCORD_WEBHOOK_URL, json={"content": message})
+    if response.status_code == 204:
+        print("Discord alert sent.")
+    else:
+        print(f"Discord alert failed: {response.status_code}")
 
 def get_historical_weather(lat, lon, start_date, end_date):
     url = "https://archive-api.open-meteo.com/v1/archive"
@@ -96,6 +110,11 @@ current_data = get_current_weather(LATITUDE, LONGITUDE)
 current_temp = current_data["current"]["temperature_2m"]
 current_time = current_data["current"]["time"]
 temp_f = (current_temp * 9/5) + 32
+
+if temp_f > HOT_THRESHOLD:
+    send_discord_alert(f"Heat alert! {temp_f:.1f}F — above your {HOT_THRESHOLD}F threshold.")
+elif temp_f < COLD_THRESHOLD:
+    send_discord_alert(f"Cold alert! {temp_f:.1f}F — below your {COLD_THRESHOLD}F threshold.")
 
 # Results
 print(f"Weather analysis for {LOCATION_NAME}")
